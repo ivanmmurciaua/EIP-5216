@@ -1,0 +1,25 @@
+{
+  "name": "1155approvalbyid",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx hardhat test"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "author": "ivanmmurciaua",
+  "license": "MIT",
+  "dependencies": {
+    "@nomiclabs/hardhat-etherscan": "^3.0.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@openzeppelin/contracts": "^4.5.0",
+    "@openzeppelin/contracts-upgradeable": "^4.5.2",
+    "chai": "^4.3.6",
+    "dotenv": "^16.0.0",
+    "hardhat": "^2.9.1",
+    "hardhat-gas-reporter": "^1.0.8",
+    "mocha": "^9.2.2",
+    "solidity-coverage": "^0.7.20"
+  }
+}
