@@ -6,6 +6,8 @@ This is quite dangerous, because if you don't revoke that approval (`setApproval
 
 This project has 2 extensions on it which are located in `./contracts/ERC1155/extensions` folder and used by the SC located in `./contracts/My1155.sol`.
 
+ivanmmurciaua is not liable for any outcomes as a result of using ERC1155ApprovalById. DYOR.
+
 #### ERC1155ApprovalById
 
 ##### Usage
