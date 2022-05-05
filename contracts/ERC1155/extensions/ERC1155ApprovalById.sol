@@ -3,8 +3,6 @@ pragma solidity ^0.8.0;
 
 import "../ERC1155.sol";
 
-import "hardhat/console.sol";
-
 /**
  * @dev Extension of {ERC1155} that allows to approve their tokens by Id.
  */
@@ -20,7 +18,7 @@ abstract contract ERC1155ApprovalById is ERC1155 {
     event ApprovalById(address indexed account, address indexed operator, uint256 id, bool approved);
 
     /**
-     * @dev Grants perrmision to `operator` to transfer the caller's tokens, according to `id`,
+     * @dev Grants permision to `operator` to transfer the caller's tokens, according to `id`,
      *
      * Emits an {ApprovalById} event.
      *
@@ -35,7 +33,6 @@ abstract contract ERC1155ApprovalById is ERC1155 {
     /**
      * @dev Returns if `operator` is approved to transfer ``account``'s tokens, according to `id`.
      *
-     * See {setApprovalById}.
      */
     function isApprovedById(address account, address operator, uint256 id) public view virtual returns (bool) {
         return _operatorApprovalsById[account][operator][id];
@@ -75,11 +72,12 @@ abstract contract ERC1155ApprovalById is ERC1155 {
             from == _msgSender() || _checkApprovalForBatch(from, _msgSender(), ids),
             "ERC1155ApprovalById: transfer caller is not owner nor approved for some id"
         );
+        // Once the Ids have been checked, the same function is called
         _safeBatchTransferFrom(from, to, ids, amounts, data);
     }
 
     /**
-     * @dev Checks if all ids are permissioned for `to`. See {IERC1155-safeBatchTransferFromById}.
+     * @dev Checks if all ids are permissioned for `to`.
      *
      */
     function _checkApprovalForBatch(
