@@ -4,11 +4,11 @@ pragma solidity ^0.8.0;
 import "../ERC1155.sol";
 
 /**
- * @dev Extension of {ERC1155} that allows to approve their tokens by amount and id.
+ * @dev Extension of {ERC1155} that allows you to approve your tokens by amount and id.
  */
 abstract contract ERC1155ApprovalByAmount is ERC1155 {
 
-    // Mapping from account to operator approvals by amount and id
+    // Mapping from account to operator approvals by id and amount.
     mapping(address => mapping(address => mapping(uint256 => uint256))) private _operatorApprovalsByAmount;
 
     /**
@@ -18,7 +18,7 @@ abstract contract ERC1155ApprovalByAmount is ERC1155 {
     event ApprovalByAmount(address indexed account, address indexed operator, uint256 id, uint256 amount);
 
     /**
-     * @dev Grants permision to `operator` to transfer the caller's tokens, according to `id`, and an amount: `amount`
+     * @dev Grants permision to `operator` to transfer the caller's tokens, according to `id`, and an amount: `amount`.
      *
      * Emits an {ApprovalByAmount} event.
      *
@@ -31,8 +31,7 @@ abstract contract ERC1155ApprovalByAmount is ERC1155 {
     }
 
     /**
-     * @dev Returns the amount for `operator` approved to transfer ``account``'s tokens, according to `id`.
-     *
+     * @dev Returns the amount allocated to `operator` approved to transfer ``account``'s tokens, according to `id`.
      */
     function allowanceById(address account, address operator, uint256 id) public view virtual returns (uint256) {
         return _operatorApprovalsByAmount[account][operator][id];
@@ -40,7 +39,6 @@ abstract contract ERC1155ApprovalByAmount is ERC1155 {
 
     /**
      * @dev See {IERC1155-safeTransferFrom}.
-     *
      */
     function safeTransferFromByAmount(
         address from,
@@ -55,13 +53,12 @@ abstract contract ERC1155ApprovalByAmount is ERC1155 {
         );
         unchecked { _operatorApprovalsByAmount[from][_msgSender()][id] -= amount; }
 
-        // Once the Id has been checked, the same function is called
+        // Once the id and amount have been checked, the same function is called.
         _safeTransferFrom(from, to, id, amount, data);
     }
 
     /**
      * @dev See {IERC1155-safeBatchTransferFrom}.
-     *
      */
     function safeBatchTransferFromByAmount(
         address from,
@@ -74,13 +71,16 @@ abstract contract ERC1155ApprovalByAmount is ERC1155 {
             from == _msgSender() || _checkApprovalForBatch(from, _msgSender(), ids, amounts),
             "ERC1155ApprovalByAmount: transfer caller is not owner nor approved for this op"
         );
-        // Once the Ids and amounts have been checked, the same function is called
+        // Once the ids and amounts have been checked, the same function is called.
         _safeBatchTransferFrom(from, to, ids, amounts, data);
     }
 
     /**
-     * @dev Checks if all ids and amounts are permissioned for `to`. See {IERC1155-safeBatchTransferFromById}.
+     * @dev Checks if all ids and amounts are permissioned for `to`. 
      *
+     * Requirements:
+     *
+     * - `ids` and `amounts` length should be equal.
      */
     function _checkApprovalForBatch(
         address from, 
@@ -97,7 +97,7 @@ abstract contract ERC1155ApprovalByAmount is ERC1155 {
     }
 
     /**
-     * @dev Approve `operator` to operate on all of `owner` tokens by id and amount
+     * @dev Approve `operator` to operate on all of `owner` tokens by id and amount.
      *
      * Emits a {ApprovalByAmount} event.
      */
