@@ -89,8 +89,16 @@ ERC1155ApprovalById
 
 ### TODO
 
-- [ ] More testing
-- [ ] Open an issue in OpenZeppelin
+- [X] Testing
+- [X] Post in OZ Forum
+- [X] Post in FEM
 - [ ] Discuss
-- [ ] Open a PR
+- [ ] Open an issue in OpenZeppelin ??
+- [ ] Open a PR ??
 - [ ] Be a real extension approved by the community
+
+### Improvements
+
+- Check <= alternative
+- in ByAmount, review in `safeTransferFromByAmount` a bad practice when from == _msgSender(), enters in unchecked assignation for himself (weird)
+- ...
