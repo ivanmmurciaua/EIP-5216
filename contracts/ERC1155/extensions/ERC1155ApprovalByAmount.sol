@@ -9,7 +9,7 @@ import "../ERC1155.sol";
 abstract contract ERC1155ApprovalByAmount is ERC1155 {
 
     // Mapping from account to operator approvals by id and amount.
-    mapping(address => mapping(address => mapping(uint256 => uint256))) private _operatorApprovalsByAmount;
+    mapping(address => mapping(address => mapping(uint256 => uint256))) private _allowances;
 
     /**
      * @dev Emmited when `account` grants or revokes permission to `operator` to transfer their tokens, according to
@@ -26,15 +26,15 @@ abstract contract ERC1155ApprovalByAmount is ERC1155 {
      *
      * - `operator` cannot be the caller.
      */
-    function setAllowance(address operator, uint256 id, uint256 amount) public virtual {
-        _setAllowance(_msgSender(), operator, id, amount);
+    function approve(address operator, uint256 id, uint256 amount) public virtual {
+        _approve(_msgSender(), operator, id, amount);
     }
 
     /**
      * @dev Returns the amount allocated to `operator` approved to transfer ``account``'s tokens, according to `id`.
      */
-    function allowanceById(address account, address operator, uint256 id) public view virtual returns (uint256) {
-        return _operatorApprovalsByAmount[account][operator][id];
+    function allowance(address account, address operator, uint256 id) public view virtual returns (uint256) {
+        return _allowances[account][operator][id];
     }
 
     /**
@@ -48,10 +48,10 @@ abstract contract ERC1155ApprovalByAmount is ERC1155 {
         bytes memory data
     ) public virtual {
         require(
-            from == _msgSender() || allowanceById(from, _msgSender(), id) >= amount,
+            from == _msgSender() || allowance(from, _msgSender(), id) >= amount,
             "ERC1155ApprovalByAmount: caller is not owner nor approved for that amount"
         );
-        unchecked { _operatorApprovalsByAmount[from][_msgSender()][id] -= amount; }
+        unchecked { _allowances[from][_msgSender()][id] -= amount; }
 
         // Once the id and amount have been checked, the same function is called.
         _safeTransferFrom(from, to, id, amount, data);
@@ -90,8 +90,8 @@ abstract contract ERC1155ApprovalByAmount is ERC1155 {
     ) internal virtual returns (bool) {
         require(ids.length == amounts.length, "ERC1155ApprovalByAmount: ids and amounts length mismatch");
         for (uint256 i = 0; i < ids.length; i++) {
-            require(allowanceById(from, to, ids[i]) >= amounts[i], "ERC1155ApprovalByAmount: operator is not approved for that id or amount");
-            unchecked { _operatorApprovalsByAmount[from][to][ids[i]] -= amounts[i]; }
+            require(allowance(from, to, ids[i]) >= amounts[i], "ERC1155ApprovalByAmount: operator is not approved for that id or amount");
+            unchecked { _allowances[from][to][ids[i]] -= amounts[i]; }
         }
         return true;
     }
@@ -101,14 +101,14 @@ abstract contract ERC1155ApprovalByAmount is ERC1155 {
      *
      * Emits a {ApprovalByAmount} event.
      */
-    function _setAllowance(
+    function _approve(
         address owner,
         address operator,
         uint256 id,
         uint256 amount
     ) internal virtual {
         require(owner != operator, "ERC1155ApprovalByAmount: setting approval status for self");
-        _operatorApprovalsByAmount[owner][operator][id] = amount;
+        _allowances[owner][operator][id] = amount;
         emit ApprovalByAmount(owner, operator, id, amount);
     }
 }
