@@ -3,14 +3,13 @@ pragma solidity ^0.8.4;
 
 import "./ERC1155/ERC1155.sol";
 import "./ERC1155/extensions/ERC1155Supply.sol";
-import "./ERC1155/extensions/ERC1155ApprovalById.sol";
 import "./ERC1155/extensions/ERC1155ApprovalByAmount.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
 
-contract My1155 is ERC1155, Ownable, Pausable, ERC1155Supply, ERC1155ApprovalById, ERC1155ApprovalByAmount {
+contract My1155 is ERC1155, Ownable, Pausable, ERC1155Supply, ERC1155ApprovalByAmount {
     constructor() ERC1155("") {}
 
     event Minted(address to, uint256 id, uint256 amount, bytes data);
