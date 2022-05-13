@@ -4,7 +4,6 @@ pragma solidity ^0.8.4;
 import "./ERC1155/ERC1155.sol";
 import "./ERC1155/extensions/ERC1155Supply.sol";
 import "./ERC1155/extensions/ERC1155ApprovalById.sol";
-import "./ERC1155/extensions/ERC1155ApprovalByAmount.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
