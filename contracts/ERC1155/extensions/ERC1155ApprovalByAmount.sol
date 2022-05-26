@@ -9,7 +9,7 @@ import "../ERC1155.sol";
 abstract contract ERC1155ApprovalByAmount is ERC1155 {
 
     // Mapping from account to operator approvals by id and amount.
-    mapping(address => mapping(address => mapping(uint256 => uint256))) private _allowances;
+    mapping(address => mapping(address => mapping(uint256 => uint256))) internal _allowances;
 
     /**
      * @dev Emmited when `account` grants or revokes permission to `operator` to transfer their tokens, according to
@@ -35,44 +35,6 @@ abstract contract ERC1155ApprovalByAmount is ERC1155 {
      */
     function allowance(address account, address operator, uint256 id) public view virtual returns (uint256) {
         return _allowances[account][operator][id];
-    }
-
-    /**
-     * @dev See {IERC1155-safeTransferFrom}.
-     */
-    function safeTransferFromByAmount(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    ) public virtual {
-        require(
-            from == _msgSender() || allowance(from, _msgSender(), id) >= amount,
-            "ERC1155ApprovalByAmount: caller is not owner nor approved for that amount"
-        );
-        unchecked { _allowances[from][_msgSender()][id] -= amount; }
-
-        // Once the id and amount have been checked, the same function is called.
-        _safeTransferFrom(from, to, id, amount, data);
-    }
-
-    /**
-     * @dev See {IERC1155-safeBatchTransferFrom}.
-     */
-    function safeBatchTransferFromByAmount(
-        address from,
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
-    ) public virtual {
-        require(
-            from == _msgSender() || _checkApprovalForBatch(from, _msgSender(), ids, amounts),
-            "ERC1155ApprovalByAmount: transfer caller is not owner nor approved for this op"
-        );
-        // Once the ids and amounts have been checked, the same function is called.
-        _safeBatchTransferFrom(from, to, ids, amounts, data);
     }
 
     /**

@@ -9,7 +9,7 @@ describe("ERC1155", function() {
       provider = waffle.provider;
       [owner,u1,u2] = await ethers.getSigners();
 
-      const __1155 = await ethers.getContractFactory("My1155");
+      const __1155 = await ethers.getContractFactory("ReferenceImplementation");
       _1155 = await __1155.deploy();
       await _1155.deployed();
     } 
@@ -54,14 +54,14 @@ describe("ERC1155ApprovalByAmount", function(){
     });
   });
 
-  describe("safeTransferFromByAmount", function(){
+  describe("safeTransferFrom", function(){
     it("Should revert when caller isn't the from param", async function(){
       const from = u1.address;
       const to = u2.address;
       const id = 0;
       const amount = 10;
       const data = 0x00;
-      await expect(_1155.connect(owner).safeTransferFromByAmount(from, to, id, amount, data)).to.be.revertedWith("ERC1155ApprovalByAmount: caller is not owner nor approved for that amount");
+      await expect(_1155.connect(owner).safeTransferFrom(from, to, id, amount, data)).to.be.revertedWith("ERC1155: caller is not owner nor approved nor approved for amount");
     });
 
     it("Should revert when id to transfer is not approved and caller != from", async function(){
@@ -70,7 +70,7 @@ describe("ERC1155ApprovalByAmount", function(){
       const id = 1;
       const amount = 10;
       const data = 0x00;
-      await expect(_1155.connect(u2).safeTransferFromByAmount(from, to, id, amount, data)).to.be.revertedWith("ERC1155ApprovalByAmount: caller is not owner nor approved for that amount");
+      await expect(_1155.connect(u2).safeTransferFrom(from, to, id, amount, data)).to.be.revertedWith("ERC1155: caller is not owner nor approved nor approved for amount");
     });
 
     it("Transfer 10 1155-0 to U2 by owner", async function(){
@@ -82,7 +82,7 @@ describe("ERC1155ApprovalByAmount", function(){
 
       const balanceBefore = parseInt(await _1155.balanceOf(to, id));
       
-      await expect(_1155.connect(owner).safeTransferFromByAmount(from, to, id, amount, data),'Transfer 10-0 to U2 by owner').to.emit(_1155, "TransferSingle");
+      await expect(_1155.connect(owner).safeTransferFrom(from, to, id, amount, data),'Transfer 10-0 to U2 by owner').to.emit(_1155, "TransferSingle");
 
       const balanceAfter = parseInt(await _1155.balanceOf(to, id));
 
@@ -99,7 +99,7 @@ describe("ERC1155ApprovalByAmount", function(){
       const allowanceBefore = parseInt(await _1155.allowance(from, to, id));
       const balanceBefore = parseInt(await _1155.balanceOf(to, id));
 
-      await expect(_1155.connect(u1).safeTransferFromByAmount(from, to, id, amount, data),'Transfer 10-0').to.emit(_1155, "TransferSingle");
+      await expect(_1155.connect(u1).safeTransferFrom(from, to, id, amount, data),'Transfer 10-0').to.emit(_1155, "TransferSingle");
 
       const allowanceAfter = parseInt(await _1155.allowance(from, to, id));
       const balanceAfter = parseInt(await _1155.balanceOf(to, id));
@@ -115,11 +115,11 @@ describe("ERC1155ApprovalByAmount", function(){
       const amount = 1;
       const data = 0x00;
 
-      await expect(_1155.connect(u1).safeTransferFromByAmount(from, to, id, amount, data),'Transfer 10-0').to.be.revertedWith("ERC1155ApprovalByAmount: caller is not owner nor approved for that amount");
+      await expect(_1155.connect(u1).safeTransferFrom(from, to, id, amount, data),'Transfer 10-0').to.be.revertedWith("ERC1155: caller is not owner nor approved nor approved for amount");
     });
   });
 
-  describe("safeBatchTransferFromByAmount", function(){
+  describe("safeBatchTransferFrom", function(){
     it("Approve id 1 for U1 with an amount of 10", async function(){
       const from = owner.address;
       const operator = u1.address;
@@ -139,7 +139,7 @@ describe("ERC1155ApprovalByAmount", function(){
       const ids = [ 0, 1 ];
       const amounts = [ amount, amount ];
       const data = 0x00;
-      await expect(_1155.connect(u1).safeBatchTransferFromByAmount(from, to, ids, amounts, data)).to.be.revertedWith("ERC1155ApprovalByAmount: operator is not approved for that id or amount");
+      await expect(_1155.connect(u1).safeBatchTransferFrom(from, to, ids, amounts, data)).to.be.revertedWith("ERC1155ApprovalByAmount: operator is not approved for that id or amount");
     });
 
     it("Transfer 10 of 0 and 1 from owner to U2", async function(){
@@ -156,7 +156,7 @@ describe("ERC1155ApprovalByAmount", function(){
         balanceBefore.push(await _1155.balanceOf(to, ids[i]));
       }
 
-      await expect(_1155.connect(owner).safeBatchTransferFromByAmount(from, to, ids, amounts, data)).to.emit(_1155, "TransferBatch");
+      await expect(_1155.connect(owner).safeBatchTransferFrom(from, to, ids, amounts, data)).to.emit(_1155, "TransferBatch");
 
       for (let i = 0; i < ids.length; i++) {
         expect(await _1155.balanceOf(to, ids[i]),'New balance of U1 of id ' + ids[i]).to.equal(parseInt(balanceBefore[i]) + amount);       
@@ -187,7 +187,7 @@ describe("ERC1155ApprovalByAmount", function(){
         allowanceBefore.push(await _1155.allowance(from, to, ids[i]));
       }
 
-      await expect(_1155.connect(u1).safeBatchTransferFromByAmount(from, to, ids, amounts, data)).to.emit(_1155, "TransferBatch");
+      await expect(_1155.connect(u1).safeBatchTransferFrom(from, to, ids, amounts, data)).to.emit(_1155, "TransferBatch");
 
       for (let i = 0; i < ids.length; i++) {
         expect(await _1155.balanceOf(to, ids[i]),'New balance of U1 of id ' + ids[i]).to.equal(parseInt(balanceBefore[i]) + amount);       
