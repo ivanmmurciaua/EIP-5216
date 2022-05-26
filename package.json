@@ -1,5 +1,5 @@
 {
-  "name": "1155approvalbyid",
+  "name": "1155approvalbyamount",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {

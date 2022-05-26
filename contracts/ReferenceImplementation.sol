@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
 
-contract My1155 is ERC1155, Ownable, Pausable, ERC1155Supply, ERC1155ApprovalByAmount {
+contract ReferenceImplementation is ERC1155, Ownable, Pausable, ERC1155Supply, ERC1155ApprovalByAmount {
     constructor() ERC1155("") {}
 
     event Minted(address to, uint256 id, uint256 amount, bytes data);
@@ -41,6 +41,45 @@ contract My1155 is ERC1155, Ownable, Pausable, ERC1155Supply, ERC1155ApprovalByA
     {
         _mintBatch(to, ids, amounts, data);
         emit BatchMinted(to, ids, amounts, data);
+    }
+
+    /**
+     * @dev safeTransferFrom implementation for using ApprovalByAmount extension
+     */
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes memory data
+    ) public override {
+        require(
+            from == _msgSender() || isApprovedForAll(from, _msgSender()) || allowance(from, _msgSender(), id) >= amount,
+            "ERC1155: caller is not owner nor approved nor approved for amount"
+        );
+        if(!isApprovedForAll(from, _msgSender())) {
+            unchecked {
+                _allowances[from][_msgSender()][id] -= amount;
+            }
+        }
+        _safeTransferFrom(from, to, id, amount, data);
+    }
+
+    /**
+     * @dev safeBatchTransferFrom implementation for using ApprovalByAmount extension
+     */
+    function safeBatchTransferFrom(
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) public virtual override {
+        require(
+            from == _msgSender() || isApprovedForAll(from, _msgSender()) || _checkApprovalForBatch(from, _msgSender(), ids, amounts),
+            "ERC1155: transfer caller is not owner nor approved nor approved for some amount"
+        );
+        _safeBatchTransferFrom(from, to, ids, amounts, data);
     }
 
     function _beforeTokenTransfer(address operator, address from, address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data)

@@ -16,7 +16,7 @@ pragma solidity ^0.8.0;
 import "./ERC1155/ERC1155.sol";
 import "./ERC1155/extensions/ERC1155ApprovalByAmount.sol";
 
-contract My1155 is ERC1155, ERC1155ApprovalByAmount { ... }
+contract ReferenceImplementation is ERC1155, ERC1155ApprovalByAmount { ... }
 ```
 
 #### Functions
@@ -25,27 +25,30 @@ contract My1155 is ERC1155, ERC1155ApprovalByAmount { ... }
 |:--------------:|:-----:|:------------:|
 | approve | address operator, uint256 id, uint256 amount | Grants permission to operator to transfer caller's tokens according to id and with a limit amount |
 | allowance | address account, address operator, uint256 id | Returns the amount for operator approved to transfer account's tokens according to id |
-| safeTransferFromByAmount | address from, address to, uint256 id, uint256 amount, bytes memory data | Uses `allowance`, substract the amount from allowance, and uses `_safeTransferFrom` from standard to transfer tokens |
-| safeBatchTransferFromByAmount | address from, address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data | Uses an internal function named `_checkApprovalForBatch` which checks if every id with the amount is approved and substract from allowance |
+
+safeTransferFrom & safeBatchTransferFrom are override from ERC1155 and implemented as example in `ReferenceImplementation.sol` contract. 
 
 ### Tests
 
 ```
 ERC1155ApprovalByAmount
     approve
-      ✔ Approve id 0 for U1 with an amount of 10 (132ms)
-      ✔ Should revert when owner try to approve himself (106ms)
+      ✔ Approve id 0 for U1 with an amount of 10 (214ms)
+      ✔ Should revert when owner try to approve himself (150ms)
     safeTransferFrom
-      ✔ Should revert when caller isn't the from param (80ms)
-      ✔ Should revert when id to transfer is not approved and caller != from (66ms)
-      ✔ Transfer 10 1155-0 to U2 by owner (117ms)
-      ✔ Transfer 10 1155-0 to U1 call by himself (164ms)
-      ✔ Should revert when U1 try to transfer 1 1155-0 to himself with allowance actual in 0 (69ms)
+      ✔ Should revert when caller isn't the from param (136ms)
+      ✔ Should revert when id to transfer is not approved and caller != from (164ms)
+      ✔ Transfer 10 1155-0 to U2 by owner (216ms)
+      ✔ Transfer 10 1155-0 to U1 call by himself (267ms)
+      ✔ Should revert when U1 try to transfer 1 1155-0 to himself with allowance actual in 0 (142ms)
     safeBatchTransferFrom
-      ✔ Approve id 1 for U1 with an amount of 10 (88ms)
-      ✔ Should be reverted because Id 0 is not approved for U1 (59ms)
-      ✔ Transfer 10 of 0 and 1 from owner to U2 (131ms)
-      ✔ Approve for Id 0 and transfer 10 of 0 and 1 to U1 (280ms)
+      ✔ Approve id 1 for U1 with an amount of 10 (184ms)
+      ✔ Should be reverted because Id 0 is not approved for U1 (106ms)
+      ✔ Transfer 10 of 0 and 1 from owner to U2 (367ms)
+      ✔ Approve for Id 0 and transfer 10 of 0 and 1 to U1 (464ms)
+
+
+  12 passing (6s)
 ```
 
 ### TODO
@@ -55,11 +58,12 @@ ERC1155ApprovalByAmount
 - [X] Post in FEM
 - [ ] Discuss
   - [X] Remove redundant ById version
-  - [ ] Fit to ERC-20 API
+  - [X] Fit to ERC-20 API
+  - [X] Remove safe(Batch)TransferFromByAmount functions and override from ERC1155
 - [ ] Be a real extension approved by the community
 
 ### Improvements
 
 - Check <= alternative
-- Review in `safeTransferFromByAmount` a bad practice when from == _msgSender(), enters in unchecked assignation for himself (weird)
+- Review in `safeTransferFrom` implemented example, a bad practice when from == _msgSender(), enters in unchecked assignation for himself (weird)
 - ...
