@@ -2,7 +2,7 @@
 
 This project starts when I realized while doing an implementation with the ERC1155 standard that the ERC1155 approval was made for all tokens (`setApprovalForAll`) regardless of quantities or/and ids.
 
-All the specification can be found in `/.EIP info/eip/eip-1166.md`.
+All the specification can be found [here](./specification/eip/eip-1166.md).
 
 ivanmmurciaua is not liable for any outcomes as a result of using ERC1155ApprovalByAmount. DYOR.
 
@@ -26,7 +26,7 @@ contract ExampleToken is ERC1155ApprovalByAmount { ... }
 | approve | address operator, uint256 id, uint256 amount | Grants permission to operator to transfer caller's tokens according to id and with a limit amount |
 | allowance | address account, address operator, uint256 id | Returns the amount for operator approved to transfer account's tokens according to id |
 
-safeTransferFrom & safeBatchTransferFrom are override from ERC1155 and implemented in `./contracts/ERC1155ApprovalByAmount.sol`. 
+safeTransferFrom & safeBatchTransferFrom are override from ERC1155 and implemented [here](./contracts/ERC1155ApprovalByAmount.sol). 
 
 ### Tests
 
