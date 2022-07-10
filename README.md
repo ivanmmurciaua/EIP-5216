@@ -60,6 +60,7 @@ ERC1155ApprovalByAmount
   - [X] Remove redundant ById version
   - [X] Fit to ERC-20 API
   - [X] Remove safe(Batch)TransferFromByAmount functions and override from ERC1155
+  - ...
 - [ ] Be a real extension approved by the community
 
 ### Improvements

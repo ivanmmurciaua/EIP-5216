@@ -40,8 +40,10 @@ abstract contract ERC1155ApprovalByAmount is ERC1155, IERC1155ApprovalByAmount {
             from == _msgSender() || isApprovedForAll(from, _msgSender()) || allowance(from, _msgSender(), id) >= amount,
             "ERC1155: caller is not owner nor approved nor approved for amount"
         );
-        unchecked {
-            _allowances[from][_msgSender()][id] -= amount;
+        if(!isApprovedForAll(from, _msgSender())) {
+            unchecked {
+                _allowances[from][_msgSender()][id] -= amount;
+            }
         }
         _safeTransferFrom(from, to, id, amount, data);
     }
@@ -77,7 +79,6 @@ abstract contract ERC1155ApprovalByAmount is ERC1155, IERC1155ApprovalByAmount {
     ) internal virtual returns (bool) {
         uint256 idsLength = ids.length;
         uint256 amountsLength = amounts.length;
-
         require(idsLength == amountsLength, "ERC1155ApprovalByAmount: ids and amounts length mismatch");
         for (uint256 i = 0; i < idsLength;) {
             require(allowance(from, to, ids[i]) >= amounts[i], "ERC1155ApprovalByAmount: operator is not approved for that id or amount");
