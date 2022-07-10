@@ -9,7 +9,7 @@ describe("ERC1155", function() {
       provider = waffle.provider;
       [owner,u1,u2] = await ethers.getSigners();
 
-      const __1155 = await ethers.getContractFactory("ReferenceImplementation");
+      const __1155 = await ethers.getContractFactory("ExampleToken");
       _1155 = await __1155.deploy();
       await _1155.deployed();
     } 
@@ -23,7 +23,7 @@ describe("ERC1155", function() {
     const ids = [ 0, 1 ];
     const amounts = Array(ids.length).fill(amount);
   
-    await expect(_1155.mintBatch(owner.address, ids, amounts, "0x00"),"mint 1155 to owner").to.emit(_1155, "BatchMinted");
+    await expect(_1155.mintBatch(owner.address, ids, amounts, "0x00"),"mint 1155 to owner").not.to.be.reverted;
   
     const realValue0 = await _1155.balanceOf(owner.address,0);
     const realValue1 = await _1155.balanceOf(owner.address,1);
