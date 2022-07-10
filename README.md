@@ -2,7 +2,7 @@
 
 This project starts when I realized while doing an implementation with the ERC1155 standard that the ERC1155 approval was made for all tokens (`setApprovalForAll`) regardless of quantities or/and ids.
 
-This is quite dangerous, because if you don't revoke that approval (`setApprovalForAll(operator, false)`), you let the operator do whatever he wants whenever he wants with all your tokens.
+All the specification can be found in `/.EIP info/eip/eip-1166.md`.
 
 ivanmmurciaua is not liable for any outcomes as a result of using ERC1155ApprovalByAmount. DYOR.
 
@@ -11,12 +11,12 @@ ivanmmurciaua is not liable for any outcomes as a result of using ERC1155Approva
 #### Usage
 
 ```solidity
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.15;
 
-import "./ERC1155/ERC1155.sol";
-import "./ERC1155/extensions/ERC1155ApprovalByAmount.sol";
+import "./ERC1155ApprovalByAmount.sol";
 
-contract ReferenceImplementation is ERC1155, ERC1155ApprovalByAmount { ... }
+contract ExampleToken is ERC1155ApprovalByAmount { ... }
 ```
 
 #### Functions
@@ -26,7 +26,7 @@ contract ReferenceImplementation is ERC1155, ERC1155ApprovalByAmount { ... }
 | approve | address operator, uint256 id, uint256 amount | Grants permission to operator to transfer caller's tokens according to id and with a limit amount |
 | allowance | address account, address operator, uint256 id | Returns the amount for operator approved to transfer account's tokens according to id |
 
-safeTransferFrom & safeBatchTransferFrom are override from ERC1155 and implemented as example in `ReferenceImplementation.sol` contract. 
+safeTransferFrom & safeBatchTransferFrom are override from ERC1155 and implemented in `./contracts/ERC1155ApprovalByAmount.sol`. 
 
 ### Tests
 
