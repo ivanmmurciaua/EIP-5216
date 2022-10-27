@@ -2,9 +2,9 @@
 
 This project starts when I realized while doing an implementation with the ERC1155 standard that the ERC1155 approval was made for all tokens (`setApprovalForAll(address operator, bool approved)`) regardless of quantities or/and ids.
 
-All the specification can be found [here](./specification/eip/eip-5216.md).
+All the specification can be found [here](https://eips.ethereum.org/EIPS/eip-5216).
 
-ivanmmurciaua is not liable for any outcomes as a result of using ERC1155ApprovalByAmount. DYOR.
+ivanmmurciaua is not liable for any outcomes as a result of using ERC1155ApprovalByAmount extension. DYOR.
 
 ### ERC1155ApprovalByAmount
 
@@ -56,15 +56,9 @@ ERC1155ApprovalByAmount
 - [X] Testing
 - [X] Post in OZ Forum
 - [X] Post in FEM
-- [ ] Discuss
+- [X] Discuss
   - [X] Remove redundant ById version
   - [X] Fit to ERC-20 API
   - [X] Remove safe(Batch)TransferFromByAmount functions and override from ERC1155
   - [x] Make PR into EIP official repository
 - [ ] Be a real extension approved by the community
-
-### Improvements
-
-- Check <= alternative
-- Review in `safeTransferFrom` implemented example, a bad practice when from == _msgSender(), enters in unchecked assignation for himself (weird)
-- ...
