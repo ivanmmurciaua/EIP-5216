@@ -40,8 +40,10 @@ abstract contract ERC1155ApprovalByAmount is ERC1155, IERC1155ApprovalByAmount {
             from == _msgSender() || isApprovedForAll(from, _msgSender()) || allowance(from, _msgSender(), id) >= amount,
             "ERC1155: caller is not owner nor approved nor approved for amount"
         );
-        unchecked {
-            _allowances[from][_msgSender()][id] -= amount;
+        if(from != _msgSender() && !isApprovedForAll(from, _msgSender())) {
+            unchecked {
+                _allowances[from][_msgSender()][id] -= amount;
+            }
         }
         _safeTransferFrom(from, to, id, amount, data);
     }
@@ -80,7 +82,9 @@ abstract contract ERC1155ApprovalByAmount is ERC1155, IERC1155ApprovalByAmount {
 
         require(idsLength == amountsLength, "ERC1155ApprovalByAmount: ids and amounts length mismatch");
         for (uint256 i = 0; i < idsLength;) {
-            require(allowance(from, to, ids[i]) >= amounts[i], "ERC1155ApprovalByAmount: operator is not approved for that id or amount");
+            if(_allowances[from][to][ids[i]] < amounts[i]) {
+                return false;
+            }
             unchecked { 
                 _allowances[from][to][ids[i]] -= amounts[i];
                 ++i; 
@@ -99,7 +103,8 @@ abstract contract ERC1155ApprovalByAmount is ERC1155, IERC1155ApprovalByAmount {
         uint256 id,
         uint256 amount
     ) internal virtual {
-        require(owner != operator, "ERC1155ApprovalByAmount: setting approval status for self");
+        require(owner != address(0), "ERC1155ApprovalByAmount: approve from the zero address");
+        require(operator != address(0), "ERC1155ApprovalByAmount: approve to the zero address");
         _allowances[owner][operator][id] = amount;
         emit ApprovalByAmount(owner, operator, id, amount);
     }
