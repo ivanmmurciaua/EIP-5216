@@ -1,25 +1,34 @@
 {
-  "name": "1155approvalbyamount",
-  "version": "1.0.0",
+  "name": "erc5216",
+  "version": "1.1.0",
+  "description": "ERC-1155 Allowance Extension",
   "main": "index.js",
   "scripts": {
     "test": "npx hardhat test"
   },
   "repository": {
-    "type": "git"
+    "type": "git",
+    "url": "git+https://github.com/ivanmmurciaua/EIP-5216.git"
   },
-  "author": "ivanmmurciaua",
-  "license": "MIT",
+  "keywords": [
+    "erc",
+    "ethereum",
+    "erc1155",
+    "erc5216",
+    "approval",
+    "allowance"
+  ],
+  "author": "EscuelaCryptoES Founders (@ivanmmurciaua, @EscuelaCryptoES)",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/ivanmmurciaua/EIP-5216/issues"
+  },
+  "homepage": "https://github.com/ivanmmurciaua/EIP-5216#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.4"
+  },
   "dependencies": {
-    "@nomiclabs/hardhat-etherscan": "^3.0.3",
-    "@nomiclabs/hardhat-waffle": "^2.0.3",
-    "@openzeppelin/contracts": "^4.5.0",
-    "@openzeppelin/contracts-upgradeable": "^4.5.2",
-    "chai": "^4.3.6",
-    "dotenv": "^16.0.0",
-    "hardhat": "^2.9.1",
-    "hardhat-gas-reporter": "^1.0.8",
-    "mocha": "^9.2.2",
-    "solidity-coverage": "^0.7.20"
+    "@openzeppelin/contracts": "^5.0.1"
   }
 }
